@@ -3,7 +3,7 @@
 Plugin Name: Simple Twitter Widget
 Plugin URI: http://chipsandtv.com/
 Description: A simple but powerful widget to display updates from a Twitter feed. Configurable, reliable and with advanced caching.
-Version: 1.0
+Version: 1.01
 Author: Matthias Siegel
 Author URI: http://chipsandtv.com/
 
@@ -42,7 +42,9 @@ if (!class_exists('Twitter_Widget')) :
 		
 		function widget($args, $instance) {
 			extract($args);
-
+			
+			global $interval;
+			
 			// User-selected settings
 			$title = apply_filters('widget_title', $instance['title']);
 			$username = $instance['username'];
@@ -57,11 +59,18 @@ if (!class_exists('Twitter_Widget')) :
 			// Before widget (defined by themes)
 			echo $before_widget;
 
+			// Callback helper for the cache interval filter
+			function setInterval() {
+				global $interval;
+				
+				return $interval;
+			}
+
 
 			// Widget action happens from here
 			
 			// Set internal Wordpress feed cache interval, by default it's 12 hours or so
-			add_filter('wp_feed_cache_transient_lifetime', create_function('', 'return $interval;'));
+			add_filter('wp_feed_cache_transient_lifetime', 'setInterval');
 			include_once(ABSPATH . WPINC . '/feed.php');
 
 			// Get current upload directory
@@ -83,10 +92,12 @@ if (!class_exists('Twitter_Widget')) :
 
 					$tweets = $feed->get_items(0, $posts);
 
-					$result = '<ul>';
+					$result = '
+						<ul>';
 
 					foreach	($tweets as $t) :
-						$result .= '<li>';
+						$result .= '
+							<li>';
 
 						// Get message
 						$text = $t->get_description();
@@ -103,24 +114,29 @@ if (!class_exists('Twitter_Widget')) :
 
 						// Make links and Twitter names clickable
 						if ($clickable) :
-							// Match protocol://address/path/file.extension?some=variable&another=asf%
-				    		$text = preg_replace('/\s([a-zA-Z]+:\/\/[a-zA-Z0-9\_\.\-\/]+)/i',' <a href="$1">$1</a>$2', $text);
+							// Match URLs
+				    		$text = preg_replace('`\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))`', '<a href="$0">$0</a>', $text);
 
 				    		// Match @name
 				    		$text = preg_replace('/(@)([a-zA-Z0-9\_]+)/', '@<a href="http://twitter.com/$2">$2</a>', $text);
 						endif;
 
 			    		// Display date/time
-						if ($datedisplay) $result .= '<span class="twitter-date"><a href="'. $t->get_permalink() .'">' . $time . '</a></span>' . ($datebreak ? '<br />' : '');
+						if ($datedisplay) $result .= '
+								<span class="twitter-date"><a href="'. $t->get_permalink() .'">' . $time . '</a></span>' . ($datebreak ? '<br />' : '');
 
 			    		// Display message without username prefix
 						$prefixlen = strlen($username . ": ");
-						$result .= '<span class="twitter-text">' . substr($text, $prefixlen, strlen($text) - $prefixlen) . '</span>';
+						$result .= '
+								<span class="twitter-text">' . substr($text, $prefixlen, strlen($text) - $prefixlen) . '</span>';
 
-						$result .= '</li>';
+						$result .= '
+							</li>';
 					endforeach;
 					
-					$result .= '</ul>';
+					$result .= '
+						</ul>
+						';
 					
 					// Save updated feed to cache file
 					@file_put_contents($cachefile, $result);
