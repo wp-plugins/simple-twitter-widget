@@ -54,7 +54,7 @@ Also keep in mind it will only work with public Twitter feeds, not private ones.
 
 == Changelog ==
 
-=1.01=
+= 1.01 =
 * URL detection should be more reliable now
 * Fix for potential problem with feed update interval
 * Tested with Wordpress 3.0
