@@ -3,7 +3,7 @@
 Plugin Name: Simple Twitter Widget
 Plugin URI: http://chipsandtv.com/
 Description: A simple but powerful widget to display updates from a Twitter feed. Configurable, reliable and with advanced caching.
-Version: 1.01
+Version: 1.02
 Author: Matthias Siegel
 Author URI: http://chipsandtv.com/
 
@@ -59,18 +59,11 @@ if (!class_exists('Twitter_Widget')) :
 			// Before widget (defined by themes)
 			echo $before_widget;
 
-			// Callback helper for the cache interval filter
-			function setInterval() {
-				global $interval;
-				
-				return $interval;
-			}
-
 
 			// Widget action happens from here
 			
 			// Set internal Wordpress feed cache interval, by default it's 12 hours or so
-			add_filter('wp_feed_cache_transient_lifetime', 'setInterval');
+			add_filter('wp_feed_cache_transient_lifetime', array(&$this, 'setInterval'));
 			include_once(ABSPATH . WPINC . '/feed.php');
 
 			// Get current upload directory
@@ -178,6 +171,14 @@ if (!class_exists('Twitter_Widget')) :
 			echo $after_widget;
 		}
 		
+		
+		// Callback helper for the cache interval filter
+		function setInterval() {
+			global $interval;
+			
+			return $interval;
+		}
+
 		
 		function update($new_instance, $old_instance) {
 			$instance = $old_instance;
