@@ -3,12 +3,12 @@
 Plugin Name: Simple Twitter Widget
 Plugin URI: http://chipsandtv.com/
 Description: A simple but powerful widget to display updates from a Twitter feed. Configurable and reliable.
-Version: 1.03
+Version: 1.04
 Author: Matthias Siegel
 Author URI: http://chipsandtv.com/
 
 
-Copyright 2011  Matthias Siegel  (email : chipsandtv@gmail.com)
+Copyright 2011	Matthias Siegel	 (email : chipsandtv@gmail.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,12 +17,12 @@ the Free Software Foundation; either version 2 of the License, or
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	 02110-1301	 USA
 */
 
 
@@ -87,7 +87,7 @@ if (!class_exists('Twitter_Widget')) :
 					$result = '
 						<ul>';
 
-					foreach	($tweets as $t) :
+					foreach ($tweets as $t) :
 						$result .= '
 							<li>';
 
@@ -112,17 +112,20 @@ if (!class_exists('Twitter_Widget')) :
 						// Make links and Twitter names clickable
 						if ($clickable) :
 							// Match URLs
-				    	$text = preg_replace('`\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))`', '<a href="$0">$0</a>', $text);
+							$text = preg_replace('`\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))`', '<a href="$0">$0</a>', $text);
 
-				    	// Match @name
-				    	$text = preg_replace('/(@)([a-zA-Z0-9\_]+)/', '@<a href="http://twitter.com/$2">$2</a>', $text);
+							// Match @name
+							$text = preg_replace('/(@)([a-zA-Z0-9\_]+)/', '@<a href="https://twitter.com/$2">$2</a>', $text);
+							
+							// Match #hashtag
+							$text = preg_replace('/(#)([a-zA-Z0-9\_]+)/', '#<a href="https://twitter.com/search/?q=$2">$2</a>', $text);
 						endif;
 
-			    	// Display date/time
+						// Display date/time
 						if ($datedisplay) $result .= '
 								<span class="twitter-date"><a href="'. $t->get_permalink() .'">' . $time . '</a></span>' . ($datebreak ? '<br />' : '');
 
-			    	// Display message without username prefix
+						// Display message without username prefix
 						$prefixlen = strlen($username . ": ");
 						$result .= '
 								<span class="twitter-text">' . substr($text, $prefixlen, strlen($text) - $prefixlen) . '</span>';
@@ -226,7 +229,7 @@ if (!class_exists('Twitter_Widget')) :
 			</p>
 
 			<p>
-				<label for="<?php echo $this->get_field_id('posts'); ?>">Display how many posts?</label>
+				<label for="<?php echo $this->get_field_id('posts'); ?>">Number of posts to display</label>
 				<input class="widefat" type="text" id="<?php echo $this->get_field_id('posts'); ?>" name="<?php echo $this->get_field_name('posts'); ?>" value="<?php echo $instance['posts']; ?>">
 			</p>
 
@@ -242,32 +245,32 @@ if (!class_exists('Twitter_Widget')) :
 								
 			<p>
 				<input class="checkbox" type="checkbox" <?php if ($instance['datedisplay']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('datedisplay'); ?>" name="<?php echo $this->get_field_name('datedisplay'); ?>">
-				<label for="<?php echo $this->get_field_id('datedisplay'); ?>">Display date?</label>
+				<label for="<?php echo $this->get_field_id('datedisplay'); ?>">Display date</label>
 				
 				<br>
 				
 				<input class="checkbox" type="checkbox" <?php if ($instance['datebreak']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('datebreak'); ?>" name="<?php echo $this->get_field_name('datebreak'); ?>">
-				<label for="<?php echo $this->get_field_id('datebreak'); ?>">Add linebreak after date?</label>
+				<label for="<?php echo $this->get_field_id('datebreak'); ?>">Add linebreak after date</label>
 				
 				<br>
 
 				<input class="checkbox" type="checkbox" <?php if ($instance['clickable']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('clickable'); ?>" name="<?php echo $this->get_field_name('clickable'); ?>">
-				<label for="<?php echo $this->get_field_id('clickable'); ?>">Make URLs &amp; usernames clickable?</label>
+				<label for="<?php echo $this->get_field_id('clickable'); ?>">Clickable URLs, names &amp; hashtags</label>
 				
 				<br>
 
 				<input class="checkbox" type="checkbox" <?php if ($instance['hideerrors']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('hideerrors'); ?>" name="<?php echo $this->get_field_name('hideerrors'); ?>">
-				<label for="<?php echo $this->get_field_id('hideerrors'); ?>">Hide error message if update fails?</label>
+				<label for="<?php echo $this->get_field_id('hideerrors'); ?>">Hide error message if update fails</label>
 
 				<br>
 
 				<input class="checkbox" type="checkbox" <?php if ($instance['encodespecial']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('encodespecial'); ?>" name="<?php echo $this->get_field_name('encodespecial'); ?>">
-				<label for="<?php echo $this->get_field_id('encodespecial'); ?>">HTML-encode special characters?</label>
+				<label for="<?php echo $this->get_field_id('encodespecial'); ?>">HTML-encode special characters</label>
 			</p>
 			
 <?php
 		}
-	}	
+	} 
 endif;
 
 
